@@ -74,6 +74,8 @@ const SetReminder = () => {
                 setFrom('');
                 messageType('');
 
+                
+
                 console.log('Good init')
             }else if(data.status == 500){
                 setErrorMessage(data.required_fields);

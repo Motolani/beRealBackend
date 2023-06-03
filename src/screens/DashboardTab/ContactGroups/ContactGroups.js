@@ -1,12 +1,53 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React,{ useState, useContext, useEffect, useRef} from 'react'
 import { Stack, Switch, Button, IconButton, Divider} from "@react-native-material/core";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { HStack } from "@react-native-material/core";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import GroupContactBox from '../../../components/GroupContactBox/GroupContactBox';
+import { AuthContext } from '../../../context/AuthContext';
+import axios from 'axios';
 
 const ContactGroups = ( {navigation} ) => {
+  const { userToken, userInfo } = useContext(AuthContext);
+  const [userContactGroups, setUserContactGroups] = useState([]);
+  
+  const getGroups = async () => {
+    user_id = userInfo.user.id
+    console.log('user_id')
+    console.log(user_id)
+    try {
+        console.log('here');
+        const url = 'http://127.0.0.1:8000/api/getGroups?userId='+user_id
+        console.log(url);
+        const {data} = await axios.get(url, { headers: { 
+          'Authorization': 'Bearer '+userToken
+        }})
+        console.log(data);
+      
+    
+        if(data.status == 200){
+          console.log (data)
+          setUserContactGroups(data.data)
+        }else if(data.status == 500){
+            // setErrorMessage(data.required_fields);
+            console.log(data.required_fields)
+        }else if(data.status == 300){
+          console.log(data.required_fields)
+          // setErrorMessage(data.message);
+      }
+
+    } catch (error) {
+        console.log('set Schedule', error)
+    }
+    // setIsLoading(false)
+  }
+
+  useEffect(() => {
+    getGroups();
+    console.log('checking');
+}, []);
+
   return (
     <ScrollView style={styles.back}>
       <Stack fill center spacing={4} style={styles.createButtonCase}>
@@ -20,6 +61,14 @@ const ContactGroups = ( {navigation} ) => {
         <View>
           <Text style={styles.groupTitleText}>Groups</Text>
         </View>
+        {userContactGroups.map((group) => (
+          <GroupContactBox 
+            title = {group.name}
+            onPressEdit = {() => console.log('hippy')}
+          />
+        ))}
+        
+        {/* <GroupContactBox />
         <GroupContactBox />
         <GroupContactBox />
         <GroupContactBox />
@@ -27,9 +76,7 @@ const ContactGroups = ( {navigation} ) => {
         <GroupContactBox />
         <GroupContactBox />
         <GroupContactBox />
-        <GroupContactBox />
-        <GroupContactBox />
-        <GroupContactBox />
+        <GroupContactBox /> */}
     </ScrollView>
   )
 }

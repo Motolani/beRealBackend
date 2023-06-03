@@ -6,6 +6,7 @@ const AuthContext = createContext();
 const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   const signIn = async (email, password) => {
     const authUser = {email, password}
@@ -17,11 +18,35 @@ const AuthProvider = ({children}) => {
 
       if(data.responseCode == 200){
         // setErrorMessage(null);
-            let userInfo = data;
-            console.log(userInfo);
-            setUserToken(userInfo.data.token);
-            console.log(userInfo.data.token);
-            
+          let userInfo = data;
+          console.log(userInfo);
+          setUserToken(userInfo.data.token);
+          setUserInfo(userInfo.data);
+          console.log(userInfo.data.token);
+      }
+    } catch (error) {
+      console.log('login error', error)
+    }
+    setIsLoading(false)
+  }
+
+  const createGroup = async (groupName, selectedContacts) => {
+    const header = { 
+      'Accept': 'application/vnd.api+json',
+      'Content-Type': 'application/x-www-form-urlencoded', 
+      'Authorization': 'Bearer '+userToken,
+    }
+    console.log(userToken);
+
+    const groupInfo = {groupName, selectedContacts}
+    setIsLoading(true)
+
+    try {
+      const {data} = await axios.post('http://127.0.0.1:8000/api/createGroup', groupInfo, { headers: header})
+      // console.log(data);
+
+      if(data.responseCode == 200){
+        setErrorMessage(null);
       }
     } catch (error) {
       console.log('login error', error)
@@ -31,7 +56,7 @@ const AuthProvider = ({children}) => {
   
   
   return (
-    <AuthContext.Provider value={{signIn, isLoading, userToken }}>
+    <AuthContext.Provider value={{signIn, createGroup, isLoading, userToken, userInfo }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,16 +3,16 @@ import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const GroupContactBox = () => {
+const GroupContactBox = ({title, onPressEdit}) => {
     return (
         <View style={styles.theGroupsContainer}>
             <View style={styles.Container}>
                 <View style={styles.BottomLayer}>
                     <View style={styles.ContentTitleContainer}>
-                        <Text style={styles.ContentTitle}>Loved Ones </Text>
+                        <Text style={styles.ContentTitle}> {title} </Text>
                     </View>
                     <View style={styles.options}>
-                        <TouchableOpacity style={styles.MoreOptionsIcon}>
+                        <TouchableOpacity style={styles.MoreOptionsIcon} onPressEdit = {onPressEdit}>
                             <Icon name="md-reader" size={22} color="#4772E1"/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.MoreOptionsIconTwo}>

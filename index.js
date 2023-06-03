@@ -15,4 +15,4 @@ AppRegistry.registerComponent(appName, () => () => (
     
     </AuthProvider>
     
-    ), () => App );
+), () => App );

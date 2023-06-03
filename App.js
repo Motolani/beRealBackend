@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CreateReminderTab from './src/screens/CreateReminderTab/CreateReminderTab';
 import { AuthContext } from './src/context/AuthContext';
 import CreateGroup from './src/screens/DashboardTab/ContactGroups/CreateGroup/CreateGroup';
+import ContactGroupListSummary from './src/screens/ContactGroupListSummary/ContactGroupListSummary';
 
 const Stack = createNativeStackNavigator();
 const App = ( navigation ) => {
@@ -18,15 +19,17 @@ const App = ( navigation ) => {
   return (
     <NavigationContainer style={styles.MainContainer}>
     <Stack.Navigator >
-      <Stack.Screen options= { ({navigation}) => ({ headerStyle: { backgroundColor: '#e2f0fd', }, headerRight: () => (<TouchableOpacity onPress= {() => navigation.navigate("Set Reminder")}><Icon style={styles.SetReminder} name="alarm" size={32} color="#4772E1" /></TouchableOpacity> ), })} name="Dashboard" component={DashboardTab} />
+      {/* <Stack.Screen options= { ({navigation}) => ({ headerStyle: { backgroundColor: '#e2f0fd', }, headerRight: () => (<TouchableOpacity onPress= {() => navigation.navigate("Set Reminder")}><Icon style={styles.SetReminder} name="alarm" size={32} color="#4772E1" /></TouchableOpacity> ), })} name="Dashboard" component={DashboardTab} /> */}
 
-      {/* {userToken ? <Stack.Screen options= { ({navigation}) => ({ headerStyle: { backgroundColor: '#e2f0fd', }, headerRight: () => (<TouchableOpacity onPress= {() => navigation.navigate("Set Reminder")}><Icon style={styles.SetReminder} name="alarm" size={32} color="#4772E1" /></TouchableOpacity> ), })} name="Dashboard" component={DashboardTab} /> : <Stack.Screen  options={{headerStyle: { backgroundColor: '#cae8f5', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.03)'} }} name="Log in" component={Login} />}   */}
+      {userToken ? <Stack.Screen options= { ({navigation}) => ({ headerStyle: { backgroundColor: '#e2f0fd', }, headerRight: () => (<TouchableOpacity onPress= {() => navigation.navigate("Set Reminder")}><Icon style={styles.SetReminder} name="alarm" size={32} color="#4772E1" /></TouchableOpacity> ), })} name="Dashboard" component={DashboardTab} /> : <Stack.Screen  options={{headerStyle: { backgroundColor: '#cae8f5', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.03)'} }} name="Log in" component={Login} />}  
       
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Register" component={Register} />
       
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Set Reminder" component={CreateReminderTab} />
 
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Create Group" component={CreateGroup} />
+
+      <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Contact group items" component={ContactGroupListSummary} />
     </Stack.Navigator>
     
   </NavigationContainer>

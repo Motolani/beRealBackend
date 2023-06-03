@@ -29,6 +29,7 @@ const Dashboard = () => {
     useEffect(() => {
       schedules();
   }, []);
+  
   return (
     <ScrollView style={styles.back}>
       <View  style={styles.Container}>
