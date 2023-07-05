@@ -3,7 +3,7 @@ import React from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const GroupContactBox = ({title, onPressEdit}) => {
+const GroupContactBox = ({title, onPressEdit, onPressDelete}) => {
     return (
         <View style={styles.theGroupsContainer}>
             <View style={styles.Container}>
@@ -12,10 +12,10 @@ const GroupContactBox = ({title, onPressEdit}) => {
                         <Text style={styles.ContentTitle}> {title} </Text>
                     </View>
                     <View style={styles.options}>
-                        <TouchableOpacity style={styles.MoreOptionsIcon} onPressEdit = {onPressEdit}>
+                        <TouchableOpacity style={styles.MoreOptionsIcon} onPress = {onPressEdit}>
                             <Icon name="md-reader" size={22} color="#4772E1"/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.MoreOptionsIconTwo}>
+                        <TouchableOpacity style={styles.MoreOptionsIconTwo} onPress = {onPressDelete}>
                             <Icon name="trash-sharp" size={22} color="#FF0000"/>
                         </TouchableOpacity>
                     </View>
@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginTop: 10,
         borderColor: '#4772E1',
+        borderWidth: 1,
+        borderColor: '#4772E1'
 
     },
     Status:{

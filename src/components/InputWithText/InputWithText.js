@@ -28,12 +28,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginVertical: 5,
     width: 310,
-    borderColor: '#777777',
-    borderWidth: 1,
     borderRadius: 13,
     paddingVertical: 15,
     paddingLeft: 20,
     marginBottom: 25 ,
+    borderWidth: 1,
+      borderColor: '#4772E1'
     
 },
 Label:{

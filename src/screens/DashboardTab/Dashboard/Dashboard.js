@@ -4,11 +4,11 @@ import HomeBorder from '../../../components/HomeBorder/HomeBorder'
 import { AuthContext } from '../../../context/AuthContext'
 import axios from 'axios';
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   const { userToken } = useContext(AuthContext);
   const [schdeduleData, setSchdeduleData] = useState([]);
   // const [error, setError] = useState([]);
-
+  
   const schedules = async () => {
     try {
       const {data, responseCode} = await axios.get('http://127.0.0.1:8000/api/schedule', { headers: { 
@@ -27,17 +27,26 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
-      schedules();
-  }, []);
+      const focusHandler = navigation.addListener('focus', () => {
+        schedules();
+      });
+      return focusHandler;
+    }, [navigation]);
   
   return (
     <ScrollView style={styles.back}>
+       <View>
+          <Text style={styles.groupTitleText}>Scheduled</Text>
+        </View>
       <View  style={styles.Container}>
       {schdeduleData.map((schdedule) => (
           <HomeBorder 
-          timeStamp={schdedule.created_at}
+          timeStamp={schdedule.start_at}
           status={schdedule.status}
           title={schdedule.title}
+          onPressDelete={() => navigation.navigate('Edit Reminder', {
+            id: schdedule.id
+          })}
           />
           // <li key={season.id}>{season}</li>
         ))}
@@ -55,5 +64,12 @@ const styles = StyleSheet.create({
   },
   back:{
     backgroundColor: '#e2f0fd',
-  }
+  },
+  groupTitleText:{
+    color: '#4772E1',
+    fontWeight:'bold',
+    fontSize: 16,
+    marginLeft: 28,
+    marginTop: 15
+  },
 })

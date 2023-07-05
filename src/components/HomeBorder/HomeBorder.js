@@ -9,7 +9,7 @@ import {
  } from "react-native-popup-menu";
 
 
-const HomeBorder = ({ timeStamp, status, title }) => {
+const HomeBorder = ({ timeStamp, status, title, onPressEdit, onPressDelete }) => {
   return (
     <View style={styles.Container}>
       <View style={styles.TopLayer}>
@@ -28,13 +28,19 @@ const HomeBorder = ({ timeStamp, status, title }) => {
           <Text style={styles.ContentTitle}>{title}</Text>
         </View>
         <MenuProvider>
-          <Menu>
-            <MenuTrigger />
-            <TouchableOpacity style={styles.MoreOptionsIcon}>
-              <Icon name="ellipsis-vertical" size={22} color="#4772E1"/>
-            </TouchableOpacity>
-            </Menu>
-          </MenuProvider>
+          <Menu >
+            {/* <MenuTrigger /> */}
+            <View style={styles.theMenu}>
+              <TouchableOpacity style={styles.MoreOptionsIcon} onPress = {onPressEdit}>
+                <Icon name="trash-sharp" size={22} color="#FF0000"/>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.MoreOptionsIconTwo} onPress = {onPressDelete}>
+                <Icon name="clipboard" size={22} color="#4772E1"/>
+              </TouchableOpacity>
+            </View>
+              
+          </Menu>
+        </MenuProvider>
       </View>
     </View>
   )
@@ -47,7 +53,9 @@ const styles = StyleSheet.create({
       height: hp('12%'),
       backgroundColor: '#f8fcff',
       borderRadius: 15,
-      marginTop: 18
+      marginTop: 18,
+      borderWidth: 1,
+      borderColor: '#4772E1'
     },
     TopLayer: {
       flexDirection: 'row',
@@ -78,10 +86,10 @@ const styles = StyleSheet.create({
       marginLeft: 70,
     },
     StatusTwo:{
-      color: 'red',
+      color: 'orange',
       fontSize: 12,
       marginTop: 6,
-      marginLeft: 70,
+      marginLeft: 120,
     },
     BottomLayer:{
       flexDirection: 'row',
@@ -98,5 +106,12 @@ const styles = StyleSheet.create({
     MoreOptionsIcon:{
       marginTop: 14,
       marginLeft: 35,
+    },
+    theMenu:{
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    MoreOptionsIconTwo:{
+      marginTop: -20
     }
 })

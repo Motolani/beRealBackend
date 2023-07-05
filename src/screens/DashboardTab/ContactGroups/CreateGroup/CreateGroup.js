@@ -15,8 +15,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import CustomButton from '../../../../components/CustomButton/CustomButton';
 import axios from 'axios';
 import { AuthContext } from '../../../../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
-const CreateGroup = (props,{navigation} ) => {
+const CreateGroup = (props) => {
 
     const [revealed, setRevealed] = useState(true);
     const [groupName, setGroupName] = useState(false);
@@ -26,9 +27,11 @@ const CreateGroup = (props,{navigation} ) => {
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState('');
-    const { userToken, userInfo } = useContext(AuthContext);
+    const { userToken, userInfo, userId} = useContext(AuthContext);
 
     // const multiSelect = useRef(null);
+    const navigation = useNavigation();
+    
     const { item, onPress } = props;
     
     const accessContacts = () => {
@@ -41,7 +44,7 @@ const CreateGroup = (props,{navigation} ) => {
                 setUserContacts(data);
                 setDeselectedContacts(data)
                 setSelectedContacts([])
-
+                
                 console.log(data)
             })
             .catch((e) => {
@@ -129,7 +132,7 @@ const CreateGroup = (props,{navigation} ) => {
                 'Authorization': 'Bearer '+userToken,
             }
             // console.log(userToken);
-            userId = userInfo.user.id
+            console.log(userInfo)
             const groupInfo = {groupName, selectedContacts, userId}
             console.log(userId);
 
@@ -141,23 +144,22 @@ const CreateGroup = (props,{navigation} ) => {
             
                 if(data.status == 200){
                     // setIsLoading(true)
-                    Alert.alert(
-                        "Created Successfully ",
-                        [
-                            { text: "OK", onPress:() => {navigation.navigate("ContactGroups")} }
-                        ]
-                    );
+                    Alert.alert('Success!', 'Group Created Successfully.', [
+                        {text: 'OK', onPress: () => navigation.navigate('Dashboard')}
+                        // {text: 'OK', onPress: () => goBack()}
+                    ]);
                     setErrorMessage(null);
                     accessContacts();
                     setGroupName();
-                    // setIsLoading(false)
+                    setIsLoading(false)
+
                 }else if(data.status == 300){
                     // setIsLoading(true)
                     Alert.alert(
                         "Failed to create group",
                         "Please try again later",
                         [
-                            { text: "OK", onPress:() => {navigation.navigate("ContactGroups")} }
+                            { text: "OK" }
                         ]
                     );
                     // setIsLoading(false)
@@ -216,6 +218,7 @@ const CreateGroup = (props,{navigation} ) => {
 
 
     useEffect(() => {
+        console.log(props)
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {

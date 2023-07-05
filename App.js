@@ -11,6 +11,8 @@ import CreateReminderTab from './src/screens/CreateReminderTab/CreateReminderTab
 import { AuthContext } from './src/context/AuthContext';
 import CreateGroup from './src/screens/DashboardTab/ContactGroups/CreateGroup/CreateGroup';
 import ContactGroupListSummary from './src/screens/ContactGroupListSummary/ContactGroupListSummary';
+import ContactDetails from './src/screens/DashboardTab/ContactGroups/ContactDetails/ContactDetails';
+import EditReminder from './src/screens/CreateReminderTab/EditReminder/EditReminder';
 
 const Stack = createNativeStackNavigator();
 const App = ( navigation ) => {
@@ -23,13 +25,17 @@ const App = ( navigation ) => {
 
       {userToken ? <Stack.Screen options= { ({navigation}) => ({ headerStyle: { backgroundColor: '#e2f0fd', }, headerRight: () => (<TouchableOpacity onPress= {() => navigation.navigate("Set Reminder")}><Icon style={styles.SetReminder} name="alarm" size={32} color="#4772E1" /></TouchableOpacity> ), })} name="Dashboard" component={DashboardTab} /> : <Stack.Screen  options={{headerStyle: { backgroundColor: '#cae8f5', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.03)'} }} name="Log in" component={Login} />}  
       
-      <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Register" component={Register} />
+      <Stack.Screen options={{ headerStyle: { backgroundColor: '#cae8f5', } }} name="Register" component={Register} />
       
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Set Reminder" component={CreateReminderTab} />
 
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Create Group" component={CreateGroup} />
 
       <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Contact group items" component={ContactGroupListSummary} />
+
+      <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Contact Details" component={ContactDetails} />
+
+      <Stack.Screen options={{ headerStyle: { backgroundColor: '#e2f0fd', } }} name="Edit Reminder" component={EditReminder} />
     </Stack.Navigator>
     
   </NavigationContainer>

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import React,{ useState, useContext, useEffect, useRef} from 'react'
 import { Stack, Switch, Button, IconButton, Divider} from "@react-native-material/core";
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -8,22 +8,26 @@ import GroupContactBox from '../../../components/GroupContactBox/GroupContactBox
 import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
 
-const ContactGroups = ( {navigation} ) => {
-  const { userToken, userInfo } = useContext(AuthContext);
+const ContactGroups = ({ navigation }) => {
+  const { userToken, userInfo, userId } = useContext(AuthContext);
   const [userContactGroups, setUserContactGroups] = useState([]);
+
   
   const getGroups = async () => {
-    user_id = userInfo.user.id
-    console.log('user_id')
-    console.log(user_id)
+    console.log('userInfo')
+    console.log(userInfo)
+    console.log(userId)
+    const thisUserId = userId;
+    
     try {
         console.log('here');
-        const url = 'http://127.0.0.1:8000/api/getGroups?userId='+user_id
+        const url = 'http://127.0.0.1:8000/api/getGroups?userId='+thisUserId
         console.log(url);
         const {data} = await axios.get(url, { headers: { 
           'Authorization': 'Bearer '+userToken
         }})
         console.log(data);
+        console.log('here');
       
     
         if(data.status == 200){
@@ -33,20 +37,61 @@ const ContactGroups = ( {navigation} ) => {
             // setErrorMessage(data.required_fields);
             console.log(data.required_fields)
         }else if(data.status == 300){
-          console.log(data.required_fields)
+          console.log(data.message)
           // setErrorMessage(data.message);
       }
 
     } catch (error) {
-        console.log('set Schedule', error)
+        console.log('get Group', error)
     }
     // setIsLoading(false)
   }
 
+  const deletePopup = (name, id) =>{ 
+    Alert.alert('Delete Group', `You are about to Delete '${name}' Group`,[
+      {text: 'OK', onPress: () => deleteGroup(id)},
+      {text: 'cancel', onPress: () => console.log('canceled')},
+  ]);
+  }
+  const deleteGroup = async (id) =>{
+
+    try {
+      
+      const header = { 
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/x-www-form-urlencoded', 
+        'Authorization': 'Bearer '+userToken,
+      }
+      console.log('here');
+      var datata = new FormData()
+      datata.append('id', id);
+      console.log(datata);
+      console.log(header);
+      const url = 'http://127.0.0.1:8000/api/deleteGroup'
+      console.log(url);
+      const {data} = await axios.post(url, datata, { headers: header})
+      // console.log(data);
+      // console.log('here');
+    
+  
+      // if(data.status == 200){
+      //   console.log (data)
+      //   Alert.alert(` ${data.data}`, [
+      //     {text: 'OK', onPress: () => console.log('okay pressed')}
+      //   ]);
+      // }
+
+    } catch (error) {
+        console.log('delete Group', error)
+    }
+  }
+
   useEffect(() => {
-    getGroups();
-    console.log('checking');
-}, []);
+    const focusHandler = navigation.addListener('focus', () => {
+      getGroups();
+    });
+    return focusHandler;
+  },[navigation]);
 
   return (
     <ScrollView style={styles.back}>
@@ -55,7 +100,7 @@ const ContactGroups = ( {navigation} ) => {
             <View style={styles.TheContainer} >
               <IconButton icon={props => <Icon name="people-sharp" size={25} style={styles.iconAdd}/>} />
               <Text style={styles.newGroupText} > New Group</Text>
-          </View>
+            </View>
           </TouchableOpacity>
         </Stack>
         <View>
@@ -64,7 +109,10 @@ const ContactGroups = ( {navigation} ) => {
         {userContactGroups.map((group) => (
           <GroupContactBox 
             title = {group.name}
-            onPressEdit = {() => console.log('hippy')}
+            onPressEdit = {() => navigation.navigate('Contact Details', {
+              contactGroupId: group.id
+            })}
+            onPressDelete = {() => deletePopup(group.name, group.id)}
           />
         ))}
         
@@ -97,7 +145,11 @@ const styles = StyleSheet.create({
       marginBottom: 20
   },
   iconAdd:{
-    color: '#eef9ff',
+    color: '#ffffff',
+    marginLeft: 5,
+  },
+  iconRefresh:{
+    color: '#4772E1',
     marginLeft: 5,
   },
   TheContainer: {

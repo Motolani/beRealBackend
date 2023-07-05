@@ -36,8 +36,8 @@ const Login = ({navigation}) => {
         <CustomButton
           text="Log in"
           onPress={onSubmit}
-          type="DEFAULT"
-          textColor="Blue"
+          type="BASE"
+          textColor="White"
         />
       </View>
       <View style={styles.SiginRegisterButtonView}>

@@ -1,4 +1,4 @@
-import { View, Text, useWindowDimensions, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, useWindowDimensions, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import React, {useContext, useState}  from 'react'
 import InputWithText from '../../components/InputWithText/InputWithText';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -18,6 +18,9 @@ const Register = ({navigation}) => {
   
   return (
     <View style={styles.container}>
+      <ScrollView>
+
+      
       {/* <Text>Login</Text> */}
       <InputWithText
         placeholder="Email address"
@@ -66,6 +69,7 @@ const Register = ({navigation}) => {
           textColor="White"
         />
       </View>
+
       <View style={styles.SiginRegisterButtonView}>
         <Text style={styles.SigInText}> Already have an account? </Text>
         <TouchableOpacity>
@@ -75,6 +79,8 @@ const Register = ({navigation}) => {
         </TouchableOpacity>
         
       </View>
+      </ScrollView>
+
     </View>
   )
 }
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: "center",
-    // backgroundColor: "#FFFFFF",
+    backgroundColor: "#e4f3fa",
   },
   button:{
     marginTop:3,
@@ -92,9 +98,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 1,
     alignContent: "center",
+    marginLeft: 30
   },
   SigupRegisterButtonViewTwo:{
-    marginTop: -8
+    marginTop: -9
   }
 })
 

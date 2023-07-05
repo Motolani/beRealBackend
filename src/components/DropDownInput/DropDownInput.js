@@ -11,7 +11,7 @@ const DropDownInput = ({ theLabel, dropdownElement, inputLabel}) => {
     <View style={styles.dropdown}>
         <Text style={styles.Label}>{theLabel}</Text>
         <SelectList
-            boxStyles= {{ backgroundColor: '#f8fcff' }}
+            boxStyles= {{ backgroundColor: '#f8fcff', color: '#4772E1'}}
             dropdownStyles= {{ backgroundColor: '#f8fcff' }}
             style={styles.selectList}
             labeltext={inputLabel}

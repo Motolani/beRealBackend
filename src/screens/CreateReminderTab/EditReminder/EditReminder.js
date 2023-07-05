@@ -16,8 +16,9 @@ import { AuthContext } from '../../../context/AuthContext'
 import axios from 'axios';
 import { SelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../../../components/CustomButton/CustomButton';
+import { useNavigation } from '@react-navigation/native';
 
-const SetReminder = ({navigation}) => {
+const EditReminder = ({props}) => {
     const [start_at, setStartDate] = useState(new Date())
     // const [open, setOpen] = useState(false)
     const [value, setValue] = useState(0)
@@ -39,8 +40,11 @@ const SetReminder = ({navigation}) => {
     const [userContactGroups, setUserContactGroups] = useState([]);
     const [messageTypeOptions, setMessageTypeOptions] = useState([]);
     const [messageOptions, setMessageOptions] = useState([]);
+    const [reminderId, setReminderId] = useState(props.route.params.id);
+
     
     const { userToken, userInfo, userId } = useContext(AuthContext);
+    const navigation = useNavigation();
 
     const accessContacts = () => {
         Contacts.getAll()
@@ -514,7 +518,7 @@ const SetReminder = ({navigation}) => {
   )
 }
 
-export default SetReminder
+export default EditReminder
 
 const styles = StyleSheet.create({
     Container: {

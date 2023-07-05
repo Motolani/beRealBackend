@@ -6,7 +6,8 @@ const AuthContext = createContext();
 const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null); 
+  const [userId, setUserId] = useState(null); 
 
   const signIn = async (email, password) => {
     const authUser = {email, password}
@@ -20,9 +21,13 @@ const AuthProvider = ({children}) => {
         // setErrorMessage(null);
           let userInfo = data;
           console.log(userInfo);
+          setUserId(userInfo.data.user.id);
           setUserToken(userInfo.data.token);
-          setUserInfo(userInfo.data);
+          setUserInfo(userInfo.data.user);
+          // setUserId(userInfo.data);
           console.log(userInfo.data.token);
+          console.log(userInfo.data.user);
+          console.log(userInfo.data.user.id);
       }
     } catch (error) {
       console.log('login error', error)
@@ -56,7 +61,7 @@ const AuthProvider = ({children}) => {
   
   
   return (
-    <AuthContext.Provider value={{signIn, createGroup, isLoading, userToken, userInfo }}>
+    <AuthContext.Provider value={{signIn, createGroup, userId, isLoading, userToken, userInfo }}>
       {children}
     </AuthContext.Provider>
   );
