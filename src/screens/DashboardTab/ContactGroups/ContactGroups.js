@@ -9,7 +9,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
 
 const ContactGroups = ({ navigation }) => {
-  const { userToken, userInfo, userId } = useContext(AuthContext);
+  const { userToken, userInfo, userId, BaseUrl } = useContext(AuthContext);
   const [userContactGroups, setUserContactGroups] = useState([]);
 
   
@@ -21,7 +21,7 @@ const ContactGroups = ({ navigation }) => {
     
     try {
         console.log('here');
-        const url = 'http://127.0.0.1:8000/api/getGroups?userId='+thisUserId
+        const url = BaseUrl+'/getGroups?userId='+thisUserId
         console.log(url);
         const {data} = await axios.get(url, { headers: { 
           'Authorization': 'Bearer '+userToken
@@ -67,7 +67,7 @@ const ContactGroups = ({ navigation }) => {
       datata.append('id', id);
       console.log(datata);
       console.log(header);
-      const url = 'http://127.0.0.1:8000/api/deleteGroup'
+      const url = BaseUrl+'/deleteGroup'
       console.log(url);
       const {data} = await axios.post(url, datata, { headers: header})
       // console.log(data);

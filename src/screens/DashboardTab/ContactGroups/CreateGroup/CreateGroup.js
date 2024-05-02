@@ -27,7 +27,7 @@ const CreateGroup = (props) => {
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState('');
-    const { userToken, userInfo, userId} = useContext(AuthContext);
+    const { userToken, userInfo, userId, BaseUrl} = useContext(AuthContext);
 
     // const multiSelect = useRef(null);
     const navigation = useNavigation();
@@ -139,7 +139,7 @@ const CreateGroup = (props) => {
             setIsLoading(true)
         
             try {
-                const {data} = await axios.post('http://127.0.0.1:8000/api/createGroup', groupInfo, { headers: header})
+                const {data} = await axios.post(BaseUrl+'/createGroup', groupInfo, { headers: header})
                 console.log(data);
             
                 if(data.status == 200){

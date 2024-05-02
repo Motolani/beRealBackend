@@ -40,7 +40,7 @@ const SetReminder = ({navigation}) => {
     const [messageTypeOptions, setMessageTypeOptions] = useState([]);
     const [messageOptions, setMessageOptions] = useState([]);
     
-    const { userToken, userInfo, userId } = useContext(AuthContext);
+    const { userToken, userInfo, userId, BaseUrl } = useContext(AuthContext);
 
     const accessContacts = () => {
         Contacts.getAll()
@@ -71,7 +71,7 @@ const SetReminder = ({navigation}) => {
         try {
             console.log('here');
             console.log(thisUserId);
-            const url = 'http://127.0.0.1:8000/api/getGroups?userId='+thisUserId
+            const url = BaseUrl+'/getGroups?userId='+thisUserId
             console.log(url);
             const {data} = await axios.get(url, { headers: { 
               'Authorization': 'Bearer '+userToken

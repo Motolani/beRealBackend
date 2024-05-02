@@ -16,11 +16,11 @@ const ContactDetails = ( props ) => {
 
     const { item, onPress } = props;
     
-    const { userToken, userInfo, userId } = useContext(AuthContext);
+    const { userToken, userInfo, userId, BaseUrl } = useContext(AuthContext);
 
     const getDetails = async() =>  {
         try{
-            const url = 'http://127.0.0.1:8000/api/getGroupDetails'
+            const url = BaseUrl+'/getGroupDetails'
             console.log(url);
 
             var datata = new FormData()

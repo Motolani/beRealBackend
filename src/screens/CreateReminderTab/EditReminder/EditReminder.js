@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, ActivityIndicator} from 'react-native'
 import {React, useState, useContext, useEffect,} from 'react'
 import DropDownInput from '../../../components/DropDownInput/DropDownInput'
 // import DatePicker from 'react-native-date-picker'
@@ -18,32 +18,35 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 
-const EditReminder = ({props}) => {
-    const [start_at, setStartDate] = useState(new Date())
+const EditReminder = (props) => {
+    const [theData, setTheData] = useState(props.route.params.data);
+
+    const [start_at, setStartDate] = useState(new Date(props.route.params.data.data.start_at))
     // const [open, setOpen] = useState(false)
     const [value, setValue] = useState(0)
     const [checked, setChecked] = useState(true);
     const [selectedIndex, setIndex] = useState(0);
     const [message, setMessage] = useState('');
     const [messageCustom, setCustomMessage] = useState('');
-    const [title, setTitle] = useState('');
-    const [duration, setDuration] = useState('');
+    const [title, setTitle] = useState(props.route.params.data.data.title);
+    const [duration, setDuration] = useState(props.route.params.data.data.duration);
     const [sendMessage, setSendMessage] = useState(0);
-    const [contact_id, setContactId] = useState(0);
+    const [contact_id, setContactId] = useState(null);
     const [from, setFrom] = useState(0);
     const [messageType, setMessageType] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userContacts, setUserContacts] = useState([]);
     const [contact, setContact] = useState('');
-    const [contactGroup, setContactGroup] = useState([]);
+    const [contactGroup, setContactGroup] = useState(null);
     const [userContactGroups, setUserContactGroups] = useState([]);
     const [messageTypeOptions, setMessageTypeOptions] = useState([]);
     const [messageOptions, setMessageOptions] = useState([]);
-    const [reminderId, setReminderId] = useState(props.route.params.id);
+    // const [reminderId, setReminderId] = useState(props.route.params.id);
+    const [prevousData, setPrevousData] = useState([]);
 
     
-    const { userToken, userInfo, userId } = useContext(AuthContext);
+    const { userToken, userInfo, userId,BaseUrl } = useContext(AuthContext);
     const navigation = useNavigation();
 
     const accessContacts = () => {
@@ -109,11 +112,11 @@ const EditReminder = ({props}) => {
         // setIsLoading(false)
     }
 
-    const scheduleIt = async () => {
+    const updateSchedule = async () => {
         console.log(userToken)
         const header = { 
-            'Accept': 'application/vnd.api+json',
-            'Content-Type': 'application/x-www-form-urlencoded', 
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Bearer '+userToken,
         }
         console.log(header);
@@ -121,32 +124,53 @@ const EditReminder = ({props}) => {
         const setBody = {title, duration, start_at, contact_id, message, sendMessage, from, messageType}
         // console.log(setBody);
         setIsLoading(true) 
-        var datata = new FormData()
-        datata.append('title', title);
-        datata.append('duration', duration);
-        datata.append('start_at', start_at);
-        if(contact != ''){
-            datata.append('contact_id', contact);
-        }
-        if(contactGroup != ''){
-            datata.append('contactGroupId', contactGroup);
-        }
-        datata.append('messageCustom', messageCustom);
-        datata.append('messageId', message);
-        datata.append('sendMessage', sendMessage);
-        if(from == 1){
-            datata.append('fromContact', contact);
-        }else{
-            datata.append('fromGroup', contactGroup);
-        }
-        datata.append('messageType', messageType);
-        datata.append('autoSend', sendMessage);
-        console.log(datata);
+        // var datatata = new FormData()
+        // datatata.append('title', title);
+        //     datatata.append('duration', duration);
+        //     datatata.append('start_at', start_at);
+        // if(contact != ''){
+        //     datatata.append('contact_id', contact);
+        // }
+        // if(contactGroup != ''){
+        //     datatata.append('contactGroupId', contactGroup);
+        // }
+        // datatata.append('messageCustom', messageCustom);
+        // datatata.append('messageId', message);
+        // datatata.append('sendMessage', sendMessage);
+        // if(from == 1){
+        //     datatata.append('fromContact', contact);
+        // }else{
+        //     datatata.append('fromGroup', contactGroup);
+        // }
+        // datatata.append('messageType', messageType);
+        // datatata.append('autoSend', sendMessage);
+        // console.log(datatata);
+
+            bodyy = {
+                title: title,
+                duration: duration,
+                start_at: start_at,
+                messageCustom: messageCustom,
+                messageId: message,
+                sendMessage: sendMessage,
+                messageType: messageType,
+                autoSend: sendMessage,
+                contact_id: contact,
+                contactGroupId: contactGroup,
+                fromContact: contact,
+                fromGroup: contactGroup
+            }
+
+        theId = theData.data.id
 
         try {
             console.log('here');
-            const url = 'http://127.0.0.1:8000/api/schedule'
-            const {data} = await axios.post(url, datata, { headers: header})
+            console.log(theId);
+            const url = BaseUrl+'/schedule/'+theId
+            console.log(url);
+
+            const {data} = await axios.patch(url, bodyy, { headers: header})
+            console.log('data');
             console.log(data);
         
             if(data.status == 200){
@@ -154,7 +178,7 @@ const EditReminder = ({props}) => {
                 // navigation.navigate('Dashboard')
 
 
-                Alert.alert('Success!', 'Notification Scheduled.', [
+                Alert.alert('Success!', 'Reminder Successfully Updated.', [
                     {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
                 ]);
 
@@ -173,7 +197,7 @@ const EditReminder = ({props}) => {
             }
 
         } catch (error) {
-            console.log('set Schedule', error)
+            console.log('update Schedule', error)
         }
         setIsLoading(false)
     }
@@ -181,7 +205,7 @@ const EditReminder = ({props}) => {
     const MsgType = async() => {
         console.log(userToken)
         try{
-            const url = 'http://127.0.0.1:8000/api/getMessageTypes'
+            const url = BaseUrl+'/getMessageTypes'
             console.log(url);
             const {data} = await axios.get(url, { headers: { 
               'Authorization': 'Bearer '+userToken
@@ -207,7 +231,7 @@ const EditReminder = ({props}) => {
         const thisUserId = userId;
         console.log(userToken)
         try{
-            const url = 'http://127.0.0.1:8000/api/getMessages?messageType='+messageType
+            const url = BaseUrl+'/getMessages?messageType='+messageType
             console.log(url);
             const {data} = await axios.get(url, { headers: { 
               'Authorization': 'Bearer '+userToken
@@ -267,8 +291,17 @@ const EditReminder = ({props}) => {
         console.log('use Effect 2');
         getGroups();
         MsgType();
+        console.log('theData')
+        console.log(theData)
     }, [])
 
+    // useEffect(() => {
+    //     if(reminderId )
+    //     console.log('ererererer');
+    //     editSchedule()
+       
+    // }, [])
+ 
     useEffect(() => {
         console.log('use Effect 3');
         Msg();
@@ -278,243 +311,249 @@ const EditReminder = ({props}) => {
         console.log('use Effect 4');
         forCustomMsg();
     }, [checked])
+    console.log('prevousData')
+        console.log(prevousData)
     
   return (
-    <ScrollView style= {styles.Container}>
-        <View style= {styles.ContainerTwo}>
-            <View style= {styles.ContainerTwo}>
-                <InputWithText
-                    placeholder="Title"
-                    value={title} 
-                    setValue={setTitle}
-                    label={'Set Title'}
-                    
-                />
+    
+        <ScrollView style= {styles.Container}>
+
                 <View>
+                    <View style= {styles.ContainerTwo}>
+                        <View style= {styles.ContainerTwo}>
+                            <InputWithText
+                                value={title}
+                                setValue={setTitle}
+                                label={'Set Title'}
+                                
+                            />
+                            <View>
 
-            </View>
+                        </View>
 
-                
-            </View>
-            <View style={styles.dropdown}>
-                <Text style={styles.Label}>Duration</Text>
-                <SelectList
-                    boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                    dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                    style={styles.selectList}
-                    labeltext={'Duration'}
-                    label={'lists'}
-                    data={dropdownElement}
-                    save={'key'}
-                    textlabel={'Duration'}
-                    setSelected={(val) => setDuration(val)} 
-                    
-                />
-            </View>
-            <View>
-                <Text style={styles.StartDate}>Start Date </Text>
-                <DatePicker
-                    style={styles.datePickerStyle}
-                    date={start_at} // Initial date from state
-                    mode="date" // The enum of date, datetime and time
-                    placeholder="select date"
-                    format="DD-MM-YYYY"
-                    minDate="01-01-2016"
-                    maxDate="01-01-2100"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateIcon: {
-                        //display: 'none',
-                        position: 'absolute',
-                        left: 0,
-                        top: 4,
-                        marginLeft: 0,
+                            
+                        </View>
+                        <View style={styles.dropdown}>
+                            <Text style={styles.Label}>Duration</Text>
+                            <SelectList
+                                boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                style={styles.selectList}
+                                labeltext={'Duration'}
+                                label={'lists'}
+                                data={dropdownElement}
+                                save={'key'}
+                                textlabel={'Duration'}
+                                setSelected={(val) => setDuration(val)} 
+                                
+                            />
+                        </View>
+                        <View>
+                            <Text style={styles.StartDate}>Start Date </Text>
+                            <DatePicker
+                                style={styles.datePickerStyle}
+                                date={start_at} // Initial date from state
+                                mode="date" // The enum of date, datetime and time
+                                placeholder="select date"
+                                format="DD-MM-YYYY"
+                                minDate="01-01-2016"
+                                maxDate="01-01-2100"
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                    dateIcon: {
+                                    //display: 'none',
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0,
+                                    
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36,
+                                        borderRadius: 10,
+                                        borderColor:'#4772E1',
+                                        backgroundColor: "#FFFFFF",
+                                    },
+                                }}
+                                onDateChange={(date) => {
+                                    setStartDate(date);
+                                }}
+                            />
+                        </View>
+                        <View style={styles.SelectFrom}>
+                            <View style={styles.dropdown}>
+                                <Text style={styles.Label}>Set From</Text>
+                                <SelectList
+                                    boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                    dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                    style={styles.selectList}
+                                    labeltext={'Set From'}
+                                    label={'lists'}
+                                    data={SelectFrom}
+                                    save={'key'}
+                                    textlabel={'Set From'}
+                                    setSelected={(val) => setFrom(val)} 
+                                />
+                            </View>
+
+                                { from == 1 ? (<View style={styles.SelectFrom}>
+                                    <View style={styles.dropdown}>
+                                        <Text style={styles.Label}>Select From Contacts</Text>
+                                        <SelectList
+                                            boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                            dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                            style={styles.selectList}
+                                            labeltext={'Set Contact'}
+                                            label={'contact'}
+                                            data={userContacts}
+                                            save={'key'}
+                                            textlabel={'Set Contact'}
+                                            setSelected={(val) => setContact(val)} 
+                                        />
+                                    </View>
+                                
+                                </View>)
+                                : from == 2 ?
+                                (<View style={styles.SelectFrom}>
+                                    <View style={styles.dropdown}>
+                                        <Text style={styles.Label}>Select From Group</Text>
+                                        <SelectList
+                                            boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                            dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                            style={styles.selectList}
+                                            labeltext={'Set Group'}
+                                            label={'contactGroup'}
+                                            data={userContactGroups}
+                                            save={'key'}
+                                            textlabel={'Set Contact'}
+                                            setSelected={(val) => setContactGroup(val)} 
+                                        />
+                                    </View>
+                                
+                                </View>) 
+                                : null 
+                                }
+                        </View>
                         
-                        },
-                        dateInput: {
-                            marginLeft: 36,
-                            borderRadius: 10,
-                            borderColor:'#4772E1',
-                            backgroundColor: "#FFFFFF",
-                        },
-                    }}
-                    onDateChange={(date) => {
-                        setStartDate(date);
-                    }}
-                />
-            </View>
-            <View style={styles.SelectFrom}>
-                <View style={styles.dropdown}>
-                    <Text style={styles.Label}>Set From</Text>
-                    <SelectList
-                        boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                        dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                        style={styles.selectList}
-                        labeltext={'Set From'}
-                        label={'lists'}
-                        data={SelectFrom}
-                        save={'key'}
-                        textlabel={'Set From'}
-                        setSelected={(val) => setFrom(val)} 
-                    />
-                </View>
-
-                    { from == 1 ? (<View style={styles.SelectFrom}>
-                        <View style={styles.dropdown}>
-                            <Text style={styles.Label}>Select From Contacts</Text>
-                            <SelectList
-                                boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                                dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                                style={styles.selectList}
-                                labeltext={'Set Contact'}
-                                label={'contact'}
-                                data={userContacts}
-                                save={'key'}
-                                textlabel={'Set Contact'}
-                                setSelected={(val) => setContact(val)} 
-                            />
-                        </View>
-                    
-                    </View>)
-                    : from == 2 ?
-                    (<View style={styles.SelectFrom}>
-                        <View style={styles.dropdown}>
-                            <Text style={styles.Label}>Select From Group</Text>
-                            <SelectList
-                                boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                                dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                                style={styles.selectList}
-                                labeltext={'Set Group'}
-                                label={'contactGroup'}
-                                data={userContactGroups}
-                                save={'key'}
-                                textlabel={'Set Contact'}
-                                setSelected={(val) => setContactGroup(val)} 
-                            />
-                        </View>
-                    
-                    </View>) 
-                    : null 
-                    }
-            </View>
-            
-        </View>
-            
-        <HStack m={4} spacing={6} style={styles.attacheView}>
-            <Text style={styles.StartDate}>Attach message </Text>
-            <Switch style={styles.messageSwitch} value={checked} onValueChange={() => setChecked(!checked)} />
-        </HStack>
-        
-        { checked == true ? 
-        (<View>
-            <HStack m={4} spacing={6} style={styles.checkboxCase}>
-            <Text style={styles.messageType}>Default message </Text>
-                <CheckBox
-                    checked={selectedIndex === 0}
-                    onPress={() => setIndex(0)}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    style={styles.checkboxOne}
-                    containerStyle={{
-                        backgroundColor: '#eef9ff',
-                        marginLeft: -10
-                    }}
-                />
-                <Text style={styles.messageTypeTwo}>Custom message </Text>
-                <CheckBox
-                    checked={selectedIndex === 1}
-                    onPress={() => setIndex(1)}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    containerStyle={{
-                        backgroundColor: '#eef9ff',
-                        marginLeft: -10
-                    }}
-                    style={styles.checkboxTwo}
-                />
-            </HStack>
-            { selectedIndex == 0 ?
-            (<View style= {styles.ContainerTwo}>
-                <View style={styles.dropdown}>
-                    <Text style={styles.Label}>Message Type</Text>
-                    <SelectList
-                        boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                        dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                        style={styles.selectList}
-                        labeltext={'Message Type'}
-                        label={'lists'}
-                        data={messageTypeOptions}
-                        save={'key'}
-                        textlabel={'Message Type'}
-                        setSelected={(val) => setMessageType(val)} 
-                    />
-                </View>
-                <View style= {styles.MessageTypeTextarea}>
-                    <View style={styles.dropdown}>
-                        <Text style={styles.Label}>Message</Text>
-                        <SelectList
-                            boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
-                            dropdownStyles= {{ backgroundColor: '#f8fcff' }}
-                            style={styles.selectList}
-                            labeltext={'Message'}
-                            label={'lists'}
-                            data={messageOptions}
-                            save={'key'}
-                            textlabel={'Message'}
-                            setSelected={(val) => setMessage(val)} 
-                        />
                     </View>
-                </View>
-
-            </View>) : 
-            (<View style= {styles.ContainerTwo}>
-                <InputWithTextarea
-                    placeholder="Message to be sent"
-                    multiline={true}
-                    numberOfLines={10}
-                    value={message} 
-                    setValue={setCustomMessage}
-                    label={'Message'}
+                        
+                    <HStack m={4} spacing={6} style={styles.attacheView}>
+                        <Text style={styles.StartDate}>Attach message </Text>
+                        <Switch style={styles.messageSwitch} value={checked} onValueChange={() => setChecked(!checked)} />
+                    </HStack>
                     
-                />
+                    { checked == true ? 
+                    (<View>
+                        <HStack m={4} spacing={6} style={styles.checkboxCase}>
+                        <Text style={styles.messageType}>Default message </Text>
+                            <CheckBox
+                                checked={selectedIndex === 0}
+                                onPress={() => setIndex(0)}
+                                checkedIcon="dot-circle-o"
+                                uncheckedIcon="circle-o"
+                                style={styles.checkboxOne}
+                                containerStyle={{
+                                    backgroundColor: '#eef9ff',
+                                    marginLeft: -10
+                                }}
+                            />
+                            <Text style={styles.messageTypeTwo}>Custom message </Text>
+                            <CheckBox
+                                checked={selectedIndex === 1}
+                                onPress={() => setIndex(1)}
+                                checkedIcon="dot-circle-o"
+                                uncheckedIcon="circle-o"
+                                containerStyle={{
+                                    backgroundColor: '#eef9ff',
+                                    marginLeft: -10
+                                }}
+                                style={styles.checkboxTwo}
+                            />
+                        </HStack>
+                        { selectedIndex == 0 ?
+                        (<View style= {styles.ContainerTwo}>
+                            <View style={styles.dropdown}>
+                                <Text style={styles.Label}>Message Type</Text>
+                                <SelectList
+                                    boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                    dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                    style={styles.selectList}
+                                    labeltext={'Message Type'}
+                                    label={'lists'}
+                                    data={messageTypeOptions}
+                                    save={'key'}
+                                    textlabel={'Message Type'}
+                                    setSelected={(val) => setMessageType(val)} 
+                                />
+                            </View>
+                            <View style= {styles.MessageTypeTextarea}>
+                                <View style={styles.dropdown}>
+                                    <Text style={styles.Label}>Message</Text>
+                                    <SelectList
+                                        boxStyles= {{ backgroundColor: '#f8fcff', borderColor:'#4772E1' }}
+                                        dropdownStyles= {{ backgroundColor: '#f8fcff' }}
+                                        style={styles.selectList}
+                                        labeltext={'Message'}
+                                        label={'lists'}
+                                        data={messageOptions}
+                                        save={'key'}
+                                        textlabel={'Message'}
+                                        setSelected={(val) => setMessage(val)} 
+                                    />
+                                </View>
+                            </View>
 
-                
-            </View>)
-            }
-            <HStack m={4} spacing={6} style={styles.messageCheckboxCase}>
-            <Text style={styles.messageType}>Notify Only </Text>
-                <CheckBox
-                    checked={sendMessage === 0}
-                    onPress={() => setSendMessage(0)}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    style={styles.sendMessageCheckBox}
-                    containerStyle={{
-                        backgroundColor: '#eef9ff',
-                        marginLeft: -10
-                    }}
-                />
-                <Text style={styles.messageTypeTwo}>Send message </Text>
-                <CheckBox
-                    checked={sendMessage === 1}
-                    onPress={() => setSendMessage(1)}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    containerStyle={{
-                        backgroundColor: '#eef9ff',
-                        marginLeft: -10
-                    }}
-                    style={styles.checkboxTwo}
-                />
-            </HStack>
-        </View>
-        ) : null
-        }
-        <Stack fill center spacing={4} style={styles.setButtonCase}>
-            <Button style={styles.setButton} title="Set" onPress={() => scheduleIt()}/>
-        </Stack>
-    </ScrollView>
+                        </View>) : 
+                        (<View style= {styles.ContainerTwo}>
+                            <InputWithTextarea
+                                placeholder="Message to be sent"
+                                multiline={true}
+                                numberOfLines={10}
+                                value={message} 
+                                setValue={setCustomMessage}
+                                label={'Message'}
+                                
+                            />
+
+                            
+                        </View>)
+                        }
+                        <HStack m={4} spacing={6} style={styles.messageCheckboxCase}>
+                        <Text style={styles.messageType}>Notify Only </Text>
+                            <CheckBox
+                                checked={sendMessage === 0}
+                                onPress={() => setSendMessage(0)}
+                                checkedIcon="dot-circle-o"
+                                uncheckedIcon="circle-o"
+                                style={styles.sendMessageCheckBox}
+                                containerStyle={{
+                                    backgroundColor: '#eef9ff',
+                                    marginLeft: -10
+                                }}
+                            />
+                            <Text style={styles.messageTypeTwo}>Send message </Text>
+                            <CheckBox
+                                checked={sendMessage === 1}
+                                onPress={() => setSendMessage(1)}
+                                checkedIcon="dot-circle-o"
+                                uncheckedIcon="circle-o"
+                                containerStyle={{
+                                    backgroundColor: '#eef9ff',
+                                    marginLeft: -10
+                                }}
+                                style={styles.checkboxTwo}
+                            />
+                        </HStack>
+                    </View>
+                    ) : null
+                    }
+                    <Stack fill center spacing={4} style={styles.setButtonCase}>
+                        <Button style={styles.setButton} title="Update" onPress={() => updateSchedule()}/>
+                    </Stack>
+                </View>
+            
+        </ScrollView>
   )
 }
 
@@ -568,6 +607,9 @@ const styles = StyleSheet.create({
         marginTop: 20,
         
     },
+    loadingIndicator:{
+        marginTop: 30
+    },
     messageSwitch:{
         marginTop: 12,
         color: '#4772E1',
@@ -608,12 +650,12 @@ const styles = StyleSheet.create({
     },
     setButton:{
         backgroundColor: '#4772E1',
-        width: 80,
+        width: 100,
         marginTop: 20
     },
     setButtonCase:{
         marginTop: 10,
-        marginBottom: 20
+        marginBottom: 60
     },
     MessageTypeTextarea:{
         marginTop: 25

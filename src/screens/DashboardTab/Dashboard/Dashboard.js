@@ -5,13 +5,15 @@ import { AuthContext } from '../../../context/AuthContext'
 import axios from 'axios';
 
 const Dashboard = ({ navigation }) => {
-  const { userToken } = useContext(AuthContext);
+  const { userToken, BaseUrl } = useContext(AuthContext);
   const [schdeduleData, setSchdeduleData] = useState([]);
   // const [error, setError] = useState([]);
+
+  
   
   const schedules = async () => {
     try {
-      const {data, responseCode} = await axios.get('http://127.0.0.1:8000/api/schedule', { headers: { 
+      const {data, responseCode} = await axios.get(BaseUrl+'/schedule', { headers: { 
         'Authorization': 'Bearer '+userToken
       }} )
       
@@ -25,6 +27,47 @@ const Dashboard = ({ navigation }) => {
       }
       
     }
+
+    const editSchedule = async(id) => {
+      
+      try {
+          console.log('reminderId');
+          console.log(id);
+          const url = BaseUrl+'/schedule/'+id+'/edit';
+          console.log(url);
+          const {data} = await axios.get(url, { headers: { 
+            'Authorization': 'Bearer '+userToken
+          }})
+          console.log(data);
+          console.log('here');
+          console.log(data.status);
+        
+          // setPrevousData(data);
+      
+          // if(data.status == 200){
+          //     const theData = data.data;
+          // const newData = theData.map(object => {
+          //     return Object.assign(object, {key: object.id, value: object.name});
+          // })
+
+          //   console.log (data)
+          //   console.log ('newGroupData')
+          //   console.log (newData)
+          //   setUserContactGroups(newData)
+          // }else if(data.status == 500){
+          //     console.log(data.required_fields)
+          // }else if(data.status == 300){
+          //     console.log(data.message)
+          // }
+            navigation.navigate('Edit Reminder', {
+            data: data
+          })
+  
+      } catch (error) {
+          console.log('edit schedule Data', error)
+      }
+      // setIsLoading(false)
+  }
 
     useEffect(() => {
       const focusHandler = navigation.addListener('focus', () => {
@@ -44,9 +87,10 @@ const Dashboard = ({ navigation }) => {
           timeStamp={schdedule.start_at}
           status={schdedule.status}
           title={schdedule.title}
-          onPressDelete={() => navigation.navigate('Edit Reminder', {
-            id: schdedule.id
-          })}
+          onPressDelete={() => editSchedule(schdedule.id)}
+          // onPressDelete={() => navigation.navigate('Edit Reminder', {
+          //   id: schdedule.id
+          // })}
           />
           // <li key={season.id}>{season}</li>
         ))}
