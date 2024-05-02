@@ -8,10 +8,28 @@ import {name as appName} from './app.json';
 import { AuthProvider } from './src/context/AuthContext';
 // import PushNotificationIOS from '@react-native-community/push-notification-ios';
 // import PushNotification from 'react-native-push-notification';
-// import messaging from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 // import firebase from 'firebase/app';
 // import 'firebase/auth';
 // import 'firebase/firestore';
+
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Background message handled:', remoteMessage);
+});
+
+messaging().onMessage(remoteMessage => {
+    console.log('Foreground message:', remoteMessage);
+    // Display the notification to the user
+});
+messaging().onNotificationOpenedApp(remoteMessage => {
+console.log('App opened by notification while in foreground:', remoteMessage);
+// Handle notification interaction when the app is in the foreground
+});
+messaging().getInitialNotification().then(remoteMessage => {
+console.log('App opened by notification from closed state:', remoteMessage);
+// Handle notification interaction when the app is opened from a closed state
+});
 
 AppRegistry.registerComponent(appName, () => () => (
 
