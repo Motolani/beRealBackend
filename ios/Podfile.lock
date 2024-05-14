@@ -503,7 +503,7 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Firebase
-  - FirebaseCore (~> 10.24.0)
+  - FirebaseCore
   - FirebaseCoreInternal
   - Flipper (= 0.125.0)
   - Flipper-Boost-iOSX (= 1.76.0.1.11)
@@ -764,6 +764,6 @@ SPEC CHECKSUMS:
   Yoga: 92d086bb705a41cc588599b51db726ba7b1d341c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 878bc8f405f5364586d3e2d726fa7282371c2580
+PODFILE CHECKSUM: 3a2fa3776f4ed9917852e00ea58d9b9c7df9265b
 
 COCOAPODS: 1.14.2

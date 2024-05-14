@@ -13,8 +13,8 @@ target 'BeRealMobileApp' do
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
-  # pod 'FirebaseCore', :modular_headers => true
-  pod 'FirebaseCore', '~> 10.24.0'
+  pod 'FirebaseCore', :modular_headers => true
+  # pod 'FirebaseCore', '~> 10.24.0'
 
   $RNFirebaseAsStaticFramework = true
 

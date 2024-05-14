@@ -16,6 +16,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A76296BD2B813ED000B99FFD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A76296BB2B813ECF00B99FFD /* GoogleService-Info.plist */; };
 		A7C5EC1729F5B4CC00BEACFC /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = A7C5EC1629F5B4CC00BEACFC /* Fonts */; };
+		A7CCA8B62BEBC141007DA3DF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A7CCA8B52BEBC140007DA3DF /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-BeRealMobileApp-BeRealMobileAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BeRealMobileApp-BeRealMobileAppTests.release.xcconfig"; path = "Target Support Files/Pods-BeRealMobileApp-BeRealMobileAppTests/Pods-BeRealMobileApp-BeRealMobileAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		A76296BB2B813ECF00B99FFD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A7C5EC1629F5B4CC00BEACFC /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		A7CCA8B52BEBC140007DA3DF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A7D68AC72A076FAB00E7EF58 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A7CCA8B52BEBC140007DA3DF /* GoogleService-Info.plist */,
 				A7C5EC1629F5B4CC00BEACFC /* Fonts */,
 				13B07FAE1A68108700A75B9A /* BeRealMobileApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -288,6 +291,7 @@
 			files = (
 				A7C5EC1729F5B4CC00BEACFC /* Fonts in Resources */,
 				A76296BD2B813ED000B99FFD /* GoogleService-Info.plist in Resources */,
+				A7CCA8B62BEBC141007DA3DF /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
